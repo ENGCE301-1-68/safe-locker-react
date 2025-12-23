@@ -1,0 +1,133 @@
+.users-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.users-header h2 {
+  margin: 0;
+  color: #007bff;
+}
+
+.btn-add {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  background: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-add:hover {
+  background: #1e7e34;
+}
+
+.add-user-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.add-user-form input, .add-user-form select {
+  flex: 1 1 150px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.add-user-form input:focus, .add-user-form select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0,123,255,0.3);
+}
+
+.add-user-form .btn-save {
+  flex: 1 1 100%;
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.add-user-form .btn-save:hover {
+  background: #0056b3;
+  transform: scale(1.02);
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.users-table th, .users-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.users-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.users-table input, .users-table select {
+  width: 90%;
+  padding: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.users-table input:focus, .users-table select:focus {
+  outline: none;
+  border-color: #1e3c72;
+  box-shadow: 0 0 5px rgba(30,60,114,0.3);
+}
+
+.btn-edit {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #ffc107;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-edit:hover {
+  background: #e0a800;
+}
+
+.btn-save {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-save:hover {
+  background: #1e7e34;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

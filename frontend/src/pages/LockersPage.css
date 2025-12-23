@@ -1,0 +1,58 @@
+.lockers-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.lockers-card h2 {
+  margin-bottom: 15px;
+  color: #007bff;
+}
+
+.lockers-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.lockers-table th, .lockers-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.lockers-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.lockers-table tr.occupied {
+  background-color: #ffe4e1; /* สีแดงอ่อน แสดงว่ามีของ */
+}
+
+.lockers-table tr.empty {
+  background-color: #e6f7ff; /* สีฟ้าอ่อน แสดงว่าง */
+}
+
+.btn-open {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #17a2b8;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-open:hover {
+  background: #117a8b;
+  transform: scale(1.05);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

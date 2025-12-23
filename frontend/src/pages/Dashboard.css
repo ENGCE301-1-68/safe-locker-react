@@ -1,0 +1,61 @@
+.dashboard-container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.dashboard-menu {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.dashboard-menu button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.dashboard-menu button:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+}
+
+.dashboard-menu button.active {
+  background: #16325c;
+}
+
+.logout-btn {
+  margin-left: auto;
+  background: #dc3545;
+}
+
+.logout-btn:hover {
+  background: #a71d2a;
+}
+
+.dashboard-time {
+  text-align: right;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.dashboard-content {
+  overflow-x: auto;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
