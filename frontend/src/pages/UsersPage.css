@@ -1,9 +1,5 @@
-.users-card {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  animation: fadeIn 0.5s ease-out;
+.users-page {
+  width: 100%;
 }
 
 .users-header {
@@ -15,56 +11,84 @@
 
 .users-header h2 {
   margin: 0;
-  color: #007bff;
+  color: #1e3c72;
 }
 
 .btn-add {
-  padding: 8px 15px;
+  padding: 8px 16px;
+  border-radius: 8px;
   border: none;
-  border-radius: 6px;
-  background: #28a745;
+  background: #1e3c72;
   color: white;
+  font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
 }
 
 .btn-add:hover {
-  background: #1e7e34;
+  background: #16325c;
 }
 
-.add-user-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-  background: #f8f9fa;
-  padding: 15px;
+/* ===== FORM ===== */
+.user-form-card {
+  background: #f8fbf9;
   border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
 }
 
-.add-user-form input, .add-user-form select {
-  flex: 1 1 150px;
+.user-form-card h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.form-grid input,
+.form-grid select {
   padding: 8px;
   border-radius: 6px;
   border: 1px solid #ccc;
 }
 
-.add-user-form input:focus, .add-user-form select:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0,123,255,0.3);
+.form-actions {
+  margin-top: 15px;
+  text-align: right;
 }
 
-.add-user-form .btn-save {
-  flex: 1 1 100%;
-  background: #007bff;
+.btn-save {
+  background: #28a745;
   color: white;
-  font-weight: bold;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
 }
 
-.add-user-form .btn-save:hover {
-  background: #0056b3;
-  transform: scale(1.02);
+.btn-save:hover {
+  background: #218838;
+}
+
+.btn-cancel {
+  margin-left: 8px;
+  background: #ccc;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-cancel:hover {
+  background: #bbb;
+}
+
+/* ===== TABLE ===== */
+.table-wrapper {
+  overflow-x: auto;
 }
 
 .users-table {
@@ -73,61 +97,105 @@
   font-size: 14px;
 }
 
-.users-table th, .users-table td {
+.users-table th {
+  background: #007bff;
+  color: white;
+}
+
+.users-table th,
+.users-table td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
 }
 
-.users-table th {
-  background-color: #007bff;
-  color: white;
-}
-
-.users-table input, .users-table select {
+.users-table input,
+.users-table select {
   width: 90%;
   padding: 5px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  transition: border 0.2s, box-shadow 0.2s;
 }
 
-.users-table input:focus, .users-table select:focus {
-  outline: none;
-  border-color: #1e3c72;
-  box-shadow: 0 0 5px rgba(30,60,114,0.3);
-}
-
+/* ปุ่ม Edit */
 .btn-edit {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 6px;
   background: #ffc107;
-  color: #333;
+  color: #212529;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s;
+  font-size: 13px;
 }
 
 .btn-edit:hover {
   background: #e0a800;
 }
 
-.btn-save {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 6px;
-  background: #28a745;
+/* ปุ่ม Delete - ใหม่ */
+.btn-delete {
+  background: #dc3545;
   color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s;
+  font-size: 13px;
+  margin-left: 8px; /* เว้นระยะห่างจากปุ่ม Edit */
 }
 
-.btn-save:hover {
-  background: #1e7e34;
+.btn-delete:hover {
+  background: #c82333;
+  transform: scale(1.05); /* เพิ่มเอฟเฟกต์เล็กน้อยตอน hover */
 }
 
-/* Animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+.btn-delete:active {
+  transform: scale(0.98);
+}
+
+/* สถานะ */
+.active {
+  color: green;
+  font-weight: bold;
+}
+
+.inactive {
+  color: red;
+  font-weight: bold;
+}
+
+/* ===== SEARCH BOX ===== */
+.users-search {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.users-search input {
+  padding: 10px 14px;
+  font-size: 16px;
+  width: 420px;
+  max-width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.users-search input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.users-search .search-info {
+  color: #666;
+  font-size: 15px;
+}
+
+/* ข้อความเมื่อไม่พบผลลัพธ์ */
+.users-no-results {
+  text-align: center;
+  margin-top: 30px;
+  color: #999;
+  font-size: 18px;
 }

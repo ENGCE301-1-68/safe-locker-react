@@ -1,3 +1,4 @@
+// frontend/src/pages/LockersPage.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './LockersPage.css';
@@ -6,8 +7,12 @@ function LockersPage() {
   const [lockers, setLockers] = useState([]);
 
   const fetchLockers = async () => {
-    const res = await axios.get('http://localhost:3000/api/lockers', { withCredentials: true });
-    setLockers(res.data);
+    try {
+      const res = await axios.get('http://localhost:3000/api/lockers', { withCredentials: true });
+      setLockers(res.data);
+    } catch (error) {
+      alert('ไม่สามารถดึงข้อมูล Locker ได้');
+    }
   };
 
   useEffect(() => {
@@ -15,14 +20,20 @@ function LockersPage() {
   }, []);
 
   const handleOpen = async (id) => {
-    await axios.put('http://localhost:3000/api/lockers/open', { locker_id: id }, { withCredentials: true });
-    fetchLockers();
+    if (!window.confirm(`คุณต้องการเปิดตู้ Locker ID: ${id} หรือไม่?`)) return;
+
+    try {
+      await axios.put('http://localhost:3000/api/lockers/open', { locker_id: id }, { withCredentials: true });
+      alert(`เปิดตู้ ${id} สำเร็จ`);
+      fetchLockers();
+    } catch (error) {
+      alert('ไม่สามารถเปิดตู้ได้');
+    }
   };
 
   const formatThaiTime = (timeStr) => {
     if (!timeStr) return '-';
     const date = new Date(timeStr);
-    // เวลาไทย GMT+7
     return new Intl.DateTimeFormat('th-TH', {
       year: 'numeric',
       month: '2-digit',
@@ -36,38 +47,47 @@ function LockersPage() {
   };
 
   return (
-    <div className="lockers-card">
-      <h2>จัดการ Locker</h2>
-      <table className="lockers-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Status</th>
-            <th>Phone Owner</th>
-            <th>User ID</th>
-            <th>Deposit Time</th>
-            <th>Update Time</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {lockers.map(locker => (
-            <tr key={locker.locker_id} className={locker.status ? 'occupied' : 'empty'}>
-              <td>{locker.locker_id}</td>
-              <td>{locker.status ? 'Occupied' : 'Empty'}</td>
-              <td>{locker.phone_owner || '-'}</td>
-              <td>{locker.user_id || '-'}</td>
-              <td>{formatThaiTime(locker.deposit_time)}</td>
-              <td>{formatThaiTime(locker.update_time)}</td>
-              <td>
+    <div className="lockers-page">
+      <h2 className="page-title">จัดการ Locker</h2>
+
+      <div className="lockers-grid">
+        {lockers.length === 0 ? (
+          <p className="no-data">ยังไม่มีข้อมูล Locker</p>
+        ) : (
+          lockers.map(locker => (
+            <div
+              key={locker.locker_id}
+              className={`locker-card ${locker.status === 1 ? 'occupied' : 'empty'}`}
+            >
+              <div className="locker-header">
+                <h3>Locker #{locker.locker_id}</h3>
+                <span className="status-badge">
+                  {locker.status === 1 ? 'ใช้งานอยู่' : 'ว่าง'}
+                </span>
+              </div>
+
+              <div className="locker-info">
+                <p><strong>ห้อง:</strong> {locker.room_number || '-'}</p>
+                <p><strong>ชื่อ-สกุล:</strong> {locker.fullname || '-'}</p>
+                <p><strong>เบอร์โทร:</strong> {locker.phone_owner || '-'}</p>
+                <p><strong>เวลาฝาก:</strong> {formatThaiTime(locker.deposit_time)}</p>
+                <p><strong>อัปเดตล่าสุด:</strong> {formatThaiTime(locker.update_time)}</p>
+              </div>
+
+              <div className="locker-action">
                 {locker.status === 1 && (
-                  <button className="btn-open" onClick={() => handleOpen(locker.locker_id)}>Open</button>
+                  <button
+                    className="btn-open"
+                    onClick={() => handleOpen(locker.locker_id)}
+                  >
+                    เปิดตู้
+                  </button>
                 )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }

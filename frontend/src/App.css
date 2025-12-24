@@ -99,3 +99,64 @@
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ===== ปุ่มฝากของ ===== */
+.btn-deposit {
+  display: block;
+  width: 100%;
+  padding: 18px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  border-radius: 14px;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+}
+
+.btn-deposit:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px rgba(40, 167, 69, 0.4);
+}
+
+.btn-deposit .btn-icon {
+  font-size: 28px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* ===== เส้นแบ่ง ===== */
+.divider {
+  text-align: center;
+  margin: 25px 0;
+  position: relative;
+  color: #999;
+  font-size: 14px;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #ddd;
+}
+
+.divider span {
+  background: white;
+  padding: 0 20px;
+}
+
+/* ===== หัวข้อแอดมิน ===== */
+.admin-section-title {
+  text-align: center;
+  margin: 20px 0 15px;
+  color: #1e3c72;
+  font-size: 18px;
+}

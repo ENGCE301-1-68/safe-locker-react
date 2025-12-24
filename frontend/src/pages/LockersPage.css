@@ -1,58 +1,129 @@
-.lockers-card {
-  background: #ffffff;
-  border-radius: 12px;
+/* frontend/src/pages/LockersPage.css */
+.lockers-page {
   padding: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  animation: fadeIn 0.5s ease-out;
+  min-height: 100%;
 }
 
-.lockers-card h2 {
-  margin-bottom: 15px;
-  color: #007bff;
+.page-title {
+  text-align: center;
+  color: #1e3c72;
+  font-size: 28px;
+  margin-bottom: 30px;
+  font-weight: 600;
 }
 
-.lockers-table {
-  width: 100%;
-  border-collapse: collapse;
+.lockers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  padding: 0 10px;
+}
+
+.locker-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+}
+
+.locker-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.locker-card.empty {
+  border-color: #28a745;
+}
+
+.locker-card.occupied {
+  border-color: #dc3545;
+}
+
+.locker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.locker-header h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #1e3c72;
+}
+
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
   font-size: 14px;
+  font-weight: bold;
+  color: white;
 }
 
-.lockers-table th, .lockers-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+.locker-card.empty .status-badge {
+  background: #28a745;
+}
+
+.locker-card.occupied .status-badge {
+  background: #dc3545;
+}
+
+.locker-info p {
+  margin: 12px 0;
+  color: #495057;
+  font-size: 15px;
+}
+
+.locker-info strong {
+  color: #1e3c72;
+}
+
+.locker-action {
+  margin-top: 25px;
   text-align: center;
 }
 
-.lockers-table th {
-  background-color: #007bff;
-  color: white;
-}
-
-.lockers-table tr.occupied {
-  background-color: #ffe4e1; /* สีแดงอ่อน แสดงว่ามีของ */
-}
-
-.lockers-table tr.empty {
-  background-color: #e6f7ff; /* สีฟ้าอ่อน แสดงว่าง */
-}
-
 .btn-open {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 6px;
-  background: #17a2b8;
+  background: #dc3545;
   color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+  transition: all 0.3s;
 }
 
 .btn-open:hover {
-  background: #117a8b;
+  background: #c82333;
   transform: scale(1.05);
 }
 
-/* Animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+.no-data {
+  text-align: center;
+  grid-column: 1 / -1;
+  color: #999;
+  font-size: 18px;
+  margin: 50px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .lockers-grid {
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+
+  .page-title {
+    font-size: 24px;
+  }
+
+  .locker-card {
+    padding: 20px;
+  }
 }

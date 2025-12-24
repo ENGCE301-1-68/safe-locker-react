@@ -7,7 +7,8 @@ dotenv.config();
 const adminRoutes = require('./routes/adminRoutes');
 const userRoutes = require('./routes/userRoutes');
 const lockerRoutes = require('./routes/lockerRoutes');
-
+const summaryRoutes = require('./routes/summaryRoutes');
+const depositRoutes = require('./routes/depositRoutes');
 const app = express();
 
 app.use(cors({
@@ -25,6 +26,8 @@ app.use(session({
 app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/lockers', lockerRoutes);
+app.use('/api/summary', summaryRoutes);
+app.use('/api/deposit', depositRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));

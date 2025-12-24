@@ -1,3 +1,4 @@
+// backend/routes/lockerRoutes.js
 const express = require('express');
 const router = express.Router();
 const { getLockers, openLocker } = require('../controllers/lockerController');
