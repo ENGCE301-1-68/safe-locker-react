@@ -42,6 +42,9 @@ app.use('/api/summary', summaryRoutes);
 app.use('/api/deposit', depositRoutes);
 app.use('/api/transactions', transactionRoutes);
 
-
-
 const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Backend running on port ${PORT}`);
+});
+
