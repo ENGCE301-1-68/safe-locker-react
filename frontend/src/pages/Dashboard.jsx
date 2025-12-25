@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import UsersPage from './UsersPage.jsx';
 import LockersPage from './LockersPage.jsx';
+import TransactionPage from './TransactionPage.jsx'; // เพิ่ม import นี้
 import './Dashboard.css';
 import axios from 'axios';
 
@@ -25,40 +26,20 @@ function Dashboard() {
 
   const fetchSummary = async () => {
     try {
-      // ดึงข้อมูลผู้ใช้
-      const usersRes = await axios.get('http://localhost:3000/api/users', { withCredentials: true });
-      const users = usersRes.data;
-
-      // ดึงข้อมูล Locker
-      const lockersRes = await axios.get('http://localhost:3000/api/lockers', { withCredentials: true });
-      const lockers = lockersRes.data;
-
-      const totalLockers = lockers.length;
-      const usedLockers = lockers.filter(l => l.status == 1).length; // status=1 = ใช้งาน
-      const availableLockers = totalLockers - usedLockers;
-
-      setSummary({
-        totalUsers: users.length,
-        activeUsers: users.filter(u => u.active == 1).length,
-        inactiveUsers: users.filter(u => u.active == 0).length,
-        totalLockers,
-        availableLockers,
-        usedLockers
+      const res = await axios.get('http://localhost:3000/api/summary', {
+        withCredentials: true
       });
-
+      setSummary(res.data);
       setShowSummary(true);
     } catch (error) {
-      console.error('Error fetching summary:', error);
-      alert('ไม่สามารถดึงข้อมูลสรุปได้ กรุณาตรวจสอบการเชื่อมต่อ');
+      alert('ไม่สามารถดึงข้อมูลสรุปได้');
     }
   };
 
   const handleLogout = async () => {
     try {
       await axios.post('http://localhost:3000/api/admin/logout', {}, { withCredentials: true });
-    } catch (err) {
-      console.log('Logout error:', err);
-    }
+    } catch (err) {}
     localStorage.removeItem('admin');
     window.location.href = '/';
   };
@@ -66,11 +47,14 @@ function Dashboard() {
   return (
     <div className="dashboard-container">
       <div className="dashboard-menu">
-        <button className="user-btn"onClick={() => setPage('users')}>
+        <button className={`user-btn ${page === 'users' ? 'active' : ''}`} onClick={() => setPage('users')}>
           จัดการผู้ใช้
         </button>
-        <button className="locker-btn" onClick={() => setPage('lockers')}>
+        <button className={`locker-btn ${page === 'lockers' ? 'active' : ''}`} onClick={() => setPage('lockers')}>
           จัดการ Locker
+        </button>
+        <button className={`transaction-btn ${page === 'transactions' ? 'active' : ''}`} onClick={() => setPage('transactions')}>
+          ประวัติการทำรายการ
         </button>
         <button className="summary-btn" onClick={fetchSummary}>
           ดูสรุปทั้งหมด
@@ -87,9 +71,10 @@ function Dashboard() {
       <div className="dashboard-content">
         {page === 'users' && <UsersPage />}
         {page === 'lockers' && <LockersPage />}
+        {page === 'transactions' && <TransactionPage />} {/* เพิ่มบรรทัดนี้ */}
       </div>
 
-      {/* ===== MODAL สรุปข้อมูล ===== */}
+      {/* MODAL สรุปข้อมูล */}
       {showSummary && (
         <div className="modal-overlay" onClick={() => setShowSummary(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>

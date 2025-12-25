@@ -25,11 +25,13 @@ const getLockers = (req, res) => {
   });
 };
 
-
 const openLocker = (req, res) => {
   const { locker_id } = req.body;
 
-  // เพิ่มการล้าง phone_owner และ deposit_time
+  if (!locker_id) {
+    return res.status(400).json({ message: 'ไม่พบ ID ตู้' });
+  }
+
   db.query(
     `UPDATE lockers 
      SET status = 0, 
@@ -47,6 +49,16 @@ const openLocker = (req, res) => {
       if (results.affectedRows === 0) {
         return res.status(404).json({ message: 'ไม่พบตู้ Locker ที่ระบุ' });
       }
+
+      // บันทึก transaction
+      db.query(
+        `INSERT INTO transactions (locker_id, action, detail, timestamp)
+         VALUES (?, 'open', 'เปิดตู้โดยแอดมิน', NOW())`,
+        [locker_id],
+        (transErr) => {
+          if (transErr) console.error('Transaction log error:', transErr);
+        }
+      );
 
       res.json({ message: `เปิดตู้ Locker ${locker_id} สำเร็จ` });
     }

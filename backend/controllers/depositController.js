@@ -1,3 +1,4 @@
+// backend/controllers/depositController.js
 const db = require('../config/db');
 
 const getAvailableLockers = (req, res) => {
@@ -41,6 +42,8 @@ const confirmDeposit = (req, res) => {
         return res.status(401).json({ message: 'ข้อมูลไม่ถูกต้อง' });
       }
 
+      const user_id = userResults[0].user_id;
+
       db.query(
         'SELECT status FROM lockers WHERE locker_id = ? AND status = 0',
         [locker_id],
@@ -53,7 +56,21 @@ const confirmDeposit = (req, res) => {
             `UPDATE lockers SET status = 1, phone_owner = ?, deposit_time = NOW(), update_time = NOW() WHERE locker_id = ?`,
             [phone.trim(), locker_id],
             (err) => {
-              if (err) return res.status(500).json({ message: 'ไม่สามารถฝากได้' });
+              if (err) {
+                console.error('Deposit error:', err);
+                return res.status(500).json({ message: 'ไม่สามารถฝากได้' });
+              }
+
+              // บันทึก transaction (เพิ่ม user_id ด้วย)
+              db.query(
+                `INSERT INTO transactions (locker_id, user_id, phone, action, detail, timestamp)
+                 VALUES (?, ?, ?, 'deposit', 'ฝากของ', NOW())`,
+                [locker_id, user_id, phone.trim()],
+                (transErr) => {
+                  if (transErr) console.error('Transaction log error:', transErr);
+                }
+              );
+
               res.json({ message: `ฝากของสำเร็จ ตู้ ${locker_id}` });
             }
           );

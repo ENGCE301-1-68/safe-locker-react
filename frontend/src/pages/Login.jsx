@@ -1,13 +1,14 @@
 // frontend/src/pages/Login.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; // เพิ่ม import นี้
+import { Link, useNavigate } from 'react-router-dom';
 import '../App.css';
 
 function Login() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     if (!id || !password) {
@@ -24,7 +25,7 @@ function Login() {
 
       if (res.data.message) {
         localStorage.setItem('admin', 'true');
-        window.location.href = '/dashboard';
+        navigate('/dashboard');
       }
     } catch (err) {
       setError('Admin ID หรือ Password ไม่ถูกต้อง');
@@ -39,7 +40,6 @@ function Login() {
 
         {/* ===== ปุ่มสำหรับลูกบ้าน ===== */}
         <Link to="/deposit" className="btn-deposit">
-       
           ฝากของใน Locker
         </Link>
 

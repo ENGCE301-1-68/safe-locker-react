@@ -6,25 +6,29 @@ import Login from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import DepositPage from './pages/DepositPage.jsx';
 
-function App() {
-  // ตรวจสอบว่ามี session แอดมินหรือไม่ (จาก localStorage)
+// Component สำหรับ Private Route (เฉพาะแอดมิน)
+const PrivateRoute = ({ children }) => {
   const isAdminLoggedIn = localStorage.getItem('admin') === 'true';
+  return isAdminLoggedIn ? children : <Navigate to="/" replace />;
+};
 
+function App() {
   return (
     <Routes>
-      {/* หน้าแรก: ถ้าเป็นแอดมินที่ login แล้ว → ไป Dashboard ทันที */}
-      <Route
-        path="/"
-        element={isAdminLoggedIn ? <Navigate to="/dashboard" replace /> : <Login />}
-      />
+      {/* หน้าแรก: ไปที่ Login เสมอ (public) */}
+      <Route path="/" element={<Login />} />
 
-      {/* หน้าฝากของสำหรับลูกบ้าน (public ไม่ต้อง login) */}
+      {/* หน้าฝากของ: public ใครก็เข้าได้ ไม่ตรวจ login */}
       <Route path="/deposit" element={<DepositPage />} />
 
-      {/* Dashboard สำหรับแอดมิน (ต้อง login ก่อน) */}
+      {/* Dashboard และหน้าอื่นๆ ของแอดมิน: ต้อง login ก่อน */}
       <Route
         path="/dashboard/*"
-        element={isAdminLoggedIn ? <Dashboard /> : <Navigate to="/" replace />}
+        element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        }
       />
 
       {/* ถ้าเข้าผิด path → กลับไปหน้า login */}

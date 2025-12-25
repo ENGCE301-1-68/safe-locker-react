@@ -176,3 +176,11 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ปุ่มประวัติการทำรายการ */
+.transaction-btn {
+  background: #6f42c1;
+}
+
+.transaction-btn:hover {
+  background: #5a32a3;
+}
