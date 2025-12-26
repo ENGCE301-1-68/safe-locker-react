@@ -153,9 +153,6 @@ function DepositPage() {
             </div>
 
             <div className="action-buttons">
-              <button onClick={handleBack} className="btn-secondary" disabled={loading}>
-                กลับ
-              </button>
               <button
                 onClick={handleDeposit}
                 className="btn-primary"
