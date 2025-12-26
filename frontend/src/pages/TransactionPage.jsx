@@ -1,6 +1,6 @@
 // frontend/src/pages/TransactionPage.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import './TransactionPage.css';
 
 function TransactionPage() {
@@ -12,7 +12,7 @@ function TransactionPage() {
   const fetchHistory = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:3000/api/lockers', { withCredentials: true });
+      const res = await api.get('api/lockers', { withCredentials: true });
       const lockers = res.data;
 
       const fakeTransactions = [];
