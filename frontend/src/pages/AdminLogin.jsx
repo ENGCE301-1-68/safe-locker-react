@@ -1,6 +1,6 @@
 // frontend/src/pages/AdminLogin.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios'; // เรียกใช้ Axios ที่ตั้งค่าไว้
 import '../App.css';
 
 function AdminLogin() {
@@ -20,10 +20,9 @@ function AdminLogin() {
     setError('');
 
     try {
-      const res = await axios.post(
-        'http://localhost:3000/api/admin/login',
-        { id, password },
-        { withCredentials: true }
+      const res = await api.post(
+        '/api/admin/login',
+        { id, password }
       );
 
       if (res.data.message) {
@@ -41,7 +40,6 @@ function AdminLogin() {
     <div className="login-wrapper">
       <div className="login-card">
         <h2 className="login-title">เข้าสู่ระบบแอดมิน</h2>
-        <p className="login-sub">สำหรับเจ้าหน้าที่จัดการระบบเท่านั้น</p>
 
         <Link to="/" className="back-to-main-btn">
           ← กลับหน้าหลัก

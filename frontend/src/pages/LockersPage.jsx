@@ -1,6 +1,6 @@
 // frontend/src/pages/LockersPage.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios'; 
 import './LockersPage.css';
 
 function LockersPage() {
@@ -8,7 +8,7 @@ function LockersPage() {
 
   const fetchLockers = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/lockers', { withCredentials: true });
+      const res = await api.get('/api/lockers');
       setLockers(res.data);
     } catch (error) {
       alert('ไม่สามารถดึงข้อมูล Locker ได้');
@@ -23,7 +23,7 @@ function LockersPage() {
     if (!window.confirm(`คุณต้องการเปิดตู้ Locker ID: ${id} หรือไม่?`)) return;
 
     try {
-      await axios.put('http://localhost:3000/api/lockers/open', { locker_id: id }, { withCredentials: true });
+      await api.put('/api/lockers/open', { locker_id: id });
       alert(`เปิดตู้ ${id} สำเร็จ`);
       fetchLockers();
     } catch (error) {

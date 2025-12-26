@@ -1,6 +1,6 @@
 // frontend/src/pages/Login.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios'; 
 import { Link, useNavigate } from 'react-router-dom';
 import '../App.css';
 
@@ -17,11 +17,7 @@ function Login() {
     }
 
     try {
-      const res = await axios.post(
-        'http://localhost:3000/api/admin/login',
-        { id, password },
-        { withCredentials: true }
-      );
+      const res = await api.post('/api/admin/login', { id, password });
 
       if (res.data.message) {
         localStorage.setItem('admin', 'true');

@@ -27,7 +27,7 @@ app.use(session({
   saveUninitialized: false,
   rolling: true,
   cookie: {
-    maxAge: 3 * 60 * 1000, // 30 นาที
+    maxAge: 30 * 60 * 1000, // 30 นาที
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax'
@@ -45,3 +45,7 @@ app.use('/api/transactions', transactionRoutes);
 
 
 const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Backend running on port ${PORT}`);
+});

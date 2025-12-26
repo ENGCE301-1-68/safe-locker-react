@@ -1,7 +1,7 @@
 // frontend/src/pages/DepositPage.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom'; // เพิ่มเพื่อลิงก์กลับหน้าแรก
+import api from '../api/axios'; 
+import { Link } from 'react-router-dom';
 import './DepositPage.css';
 
 function DepositPage() {
@@ -24,7 +24,7 @@ function DepositPage() {
     setMessage('');
 
     try {
-      const res = await axios.post('http://localhost:3000/api/deposit/available', {
+      const res = await api.post('/api/deposit/available', {
         phone: phone.trim(),
         passcode: passcode.trim()
       });
@@ -56,7 +56,7 @@ function DepositPage() {
     setMessage('');
 
     try {
-      const res = await axios.post('http://localhost:3000/api/deposit/confirm', {
+      const res = await api.post('/api/deposit/confirm', {
         phone: phone.trim(),
         passcode: passcode.trim(),
         locker_id: selectedLocker
@@ -85,7 +85,6 @@ function DepositPage() {
 
   return (
     <div className="deposit-page">
-      {/* ปุ่มกลับซ้ายบน - แสดงทั้ง 2 ขั้นตอน */}
       <Link to="/" className="back-button">
         ← กลับหน้าหลัก
       </Link>
@@ -99,7 +98,6 @@ function DepositPage() {
           </div>
         )}
 
-        {/* ขั้นตอน 1 */}
         {step === 1 && (
           <form onSubmit={handleCheckUser} className="deposit-form">
             <div className="input-group">
@@ -132,7 +130,6 @@ function DepositPage() {
           </form>
         )}
 
-        {/* ขั้นตอน 2 */}
         {step === 2 && (
           <div className="select-locker-step">
             <h2 className="select-title">เลือกตู้ว่าง (มี {availableLockers.length} ตู้)</h2>
@@ -156,6 +153,9 @@ function DepositPage() {
             </div>
 
             <div className="action-buttons">
+              <button onClick={handleBack} className="btn-secondary" disabled={loading}>
+                กลับ
+              </button>
               <button
                 onClick={handleDeposit}
                 className="btn-primary"

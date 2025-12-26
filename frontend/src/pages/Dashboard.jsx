@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import UsersPage from './UsersPage.jsx';
 import LockersPage from './LockersPage.jsx';
-import TransactionPage from './TransactionPage.jsx'; // เพิ่ม import นี้
+import TransactionPage from './TransactionPage.jsx'; 
 import './Dashboard.css';
-import axios from 'axios';
+import api from '../api/axios'; 
 
 function Dashboard() {
   const [page, setPage] = useState('users');
@@ -26,9 +26,7 @@ function Dashboard() {
 
   const fetchSummary = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/summary', {
-        withCredentials: true
-      });
+      const res = await api.get('/api/summary');
       setSummary(res.data);
       setShowSummary(true);
     } catch (error) {
@@ -38,8 +36,10 @@ function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:3000/api/admin/logout', {}, { withCredentials: true });
-    } catch (err) {}
+      await api.post('/api/admin/logout', {});
+    } catch (err) {
+      console.log('Logout error:', err);
+    }
     localStorage.removeItem('admin');
     window.location.href = '/';
   };
@@ -71,10 +71,9 @@ function Dashboard() {
       <div className="dashboard-content">
         {page === 'users' && <UsersPage />}
         {page === 'lockers' && <LockersPage />}
-        {page === 'transactions' && <TransactionPage />} {/* เพิ่มบรรทัดนี้ */}
+        {page === 'transactions' && <TransactionPage />}
       </div>
 
-      {/* MODAL สรุปข้อมูล */}
       {showSummary && (
         <div className="modal-overlay" onClick={() => setShowSummary(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>

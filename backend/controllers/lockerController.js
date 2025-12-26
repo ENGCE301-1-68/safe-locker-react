@@ -6,6 +6,7 @@ const getLockers = (req, res) => {
     SELECT 
       l.locker_id,
       l.status,
+  
       l.phone_owner,
       l.deposit_time,
       l.update_time,

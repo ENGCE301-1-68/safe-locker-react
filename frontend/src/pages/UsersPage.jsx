@@ -1,6 +1,6 @@
 // frontend/src/pages/UsersPage.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios'; 
 import './UsersPage.css';
 
 const emptyForm = {
@@ -22,9 +22,7 @@ function UsersPage() {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/users', {
-        withCredentials: true
-      });
+      const res = await api.get('/api/users');
       setUsers(res.data);
       setFilteredUsers(res.data); // แสดงทั้งหมดตอนโหลดครั้งแรก
     } catch (error) {
@@ -69,10 +67,9 @@ function UsersPage() {
 
   const handleSaveEdit = async () => {
     try {
-      await axios.put(
-        'http://localhost:3000/api/users',
-        { ...formData, user_id: editUserId },
-        { withCredentials: true }
+      await api.put(
+        '/api/users',
+        { ...formData, user_id: editUserId }
       );
       alert('แก้ไขผู้ใช้สำเร็จ');
       setEditUserId(null);
@@ -90,10 +87,9 @@ function UsersPage() {
     }
 
     try {
-      await axios.post(
-        'http://localhost:3000/api/users',
-        formData,
-        { withCredentials: true }
+      await api.post(
+        '/api/users',
+        formData
       );
       alert('เพิ่มผู้ใช้สำเร็จ!');
       setFormData(emptyForm);
@@ -109,9 +105,7 @@ function UsersPage() {
     if (!window.confirm('คุณแน่ใจหรือไม่ว่าต้องการลบผู้ใช้นี้?')) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/users/${user_id}`, {
-        withCredentials: true
-      });
+      await api.delete(`/api/users/${user_id}`);
       alert('ลบผู้ใช้สำเร็จ');
       fetchUsers();
     } catch (error) {
@@ -121,21 +115,6 @@ function UsersPage() {
 
   return (
     <div className="users-page">
-
-      {/* ===== HEADER ===== */}
-      <div className="users-header">
-        <h2>จัดการข้อมูลผู้ใช้</h2>
-        <button
-          className="btn-add"
-          onClick={() => {
-            setShowAddForm(!showAddForm);
-            setEditUserId(null);
-            setFormData(emptyForm);
-          }}
-        >
-          + เพิ่มผู้ใช้
-        </button>
-      </div>
 
       {/* ===== SEARCH BOX ===== */}
       <div className="users-search">
@@ -152,8 +131,20 @@ function UsersPage() {
         )}
       </div>
 
+      <div className="users-header">
+        <h2>จัดการข้อมูลผู้ใช้</h2>
+        <button
+          className="btn-add"
+          onClick={() => {
+            setShowAddForm(!showAddForm);
+            setEditUserId(null);
+            setFormData(emptyForm);
+          }}
+        >
+          + เพิ่มผู้ใช้
+        </button>
+      </div>
 
-      {/* ===== ADD FORM ===== */}
       {showAddForm && (
         <div className="user-form-card">
           <h3>เพิ่มผู้ใช้ใหม่</h3>
@@ -175,7 +166,6 @@ function UsersPage() {
         </div>
       )}
 
-      {/* ===== TABLE ===== */}
       <div className="table-wrapper">
         <table className="users-table">
           <thead>
@@ -190,8 +180,8 @@ function UsersPage() {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map(user => (
-              <tr key={user.user_id}>
+            {filteredUsers.map((user, index) => (
+              <tr key={user.phone + index}>
                 {editUserId === user.user_id ? (
                   <>
                     <td><input value={formData.room_number} onChange={e => setFormData({ ...formData, room_number: e.target.value })} /></td>
