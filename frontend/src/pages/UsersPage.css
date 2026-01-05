@@ -1,126 +1,176 @@
-.users-page {
+/* frontend/src/pages/UsersPage.css */
+
+/* ทำให้ทั้งหน้านี้ขยายเต็มพื้นที่ที่มี */
+.users-page-container {
   width: 100%;
-}
-
-.users-header {
+  height: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+  flex-direction: column;
+  padding: 20px;
+  gap: 20px;
 }
 
-.users-header h2 {
+.users-page-title {
   margin: 0;
+  font-size: 26px;
   color: #1e3c72;
+  font-weight: 600;
 }
 
-.btn-add {
-  padding: 8px 16px;
+.users-controls-bar {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ===== ช่องค้นหา กลับไปเหมือนเวอร์ชันแรก ===== */
+.search-input {
+  width: 420px;
+  max-width: 100%; /* ไม่ให้เกินหน้าจอในมือถือ */
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1px solid #ccc;
   border-radius: 8px;
-  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.btn-add-user {
+  padding: 12px 24px;
   background: #1e3c72;
   color: white;
+  border: none;
+  border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
+  white-space: nowrap;
 }
 
-.btn-add:hover {
+.btn-add-user:hover {
   background: #16325c;
 }
 
-/* ===== FORM ===== */
-.user-form-card {
+/* Form เพิ่มผู้ใช้ */
+.add-form-card {
   background: #f8fbf9;
   border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 24px;
   border: 1px solid #ddd;
 }
 
-.user-form-card h3 {
+.add-form-card h3 {
   margin-top: 0;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  color: #1e3c72;
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
 }
 
 .form-grid input,
 .form-grid select {
-  padding: 8px;
+  padding: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  font-size: 15px;
 }
 
-.form-actions {
-  margin-top: 15px;
+.form-buttons {
+  margin-top: 20px;
   text-align: right;
 }
 
-.btn-save {
+.btn-save,
+.btn-save-inline {
   background: #28a745;
   color: white;
-  padding: 6px 14px;
-  border-radius: 6px;
+  padding: 8px 16px;
   border: none;
+  border-radius: 6px;
   cursor: pointer;
 }
 
-.btn-save:hover {
+.btn-save:hover,
+.btn-save-inline:hover {
   background: #218838;
 }
 
-.btn-cancel {
-  margin-left: 8px;
+.btn-cancel,
+.btn-cancel-inline {
   background: #ccc;
-  padding: 6px 14px;
-  border-radius: 6px;
+  margin-left: 10px;
+  padding: 8px 16px;
   border: none;
+  border-radius: 6px;
   cursor: pointer;
 }
 
-.btn-cancel:hover {
+.btn-cancel:hover,
+.btn-cancel-inline:hover {
   background: #bbb;
 }
 
-/* ===== TABLE ===== */
+/* ตาราง - ยังคงขยายเต็มพื้นที่ */
 .table-wrapper {
-  overflow-x: auto;
+  flex: 1;
+  overflow: auto;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .users-table {
   width: 100%;
+  min-width: 900px; /* ป้องกันหดเกินไปในหน้าจอเล็ก */
   border-collapse: collapse;
-  font-size: 14px;
+  background: white;
 }
 
 .users-table th {
-  background: #007bff;
+  background: #1e3c72;
   color: white;
+  padding: 14px 12px;
+  text-align: center;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-.users-table th,
 .users-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+  padding: 12px;
   text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.users-table tr:hover {
+  background: #f8fbff;
 }
 
 .users-table input,
 .users-table select {
   width: 90%;
-  padding: 5px;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-/* ปุ่ม Edit */
+/* ปุ่มในตาราง */
 .btn-edit {
   background: #ffc107;
   color: #212529;
+  padding: 6px 12px;
   border: none;
-  padding: 5px 10px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 13px;
@@ -130,72 +180,34 @@
   background: #e0a800;
 }
 
-/* ปุ่ม Delete - ใหม่ */
 .btn-delete {
   background: #dc3545;
   color: white;
+  padding: 6px 12px;
   border: none;
-  padding: 5px 10px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 13px;
-  margin-left: 8px; /* เว้นระยะห่างจากปุ่ม Edit */
+  margin-left: 8px;
 }
 
 .btn-delete:hover {
   background: #c82333;
-  transform: scale(1.05); /* เพิ่มเอฟเฟกต์เล็กน้อยตอน hover */
 }
 
-.btn-delete:active {
-  transform: scale(0.98);
-}
-
-/* สถานะ */
-.active {
+.status-active {
   color: green;
   font-weight: bold;
 }
 
-.inactive {
+.status-inactive {
   color: red;
   font-weight: bold;
 }
 
-/* ===== SEARCH BOX ===== */
-.users-search {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.users-search input {
-  padding: 10px 14px;
-  font-size: 16px;
-  width: 420px;
-  max-width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.users-search input:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-}
-
-.users-search .search-info {
-  color: #666;
-  font-size: 15px;
-}
-
-/* ข้อความเมื่อไม่พบผลลัพธ์ */
-.users-no-results {
+.no-data {
+  padding: 40px;
   text-align: center;
-  margin-top: 30px;
   color: #999;
   font-size: 18px;
 }

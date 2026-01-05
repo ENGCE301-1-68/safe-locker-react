@@ -1,112 +1,167 @@
-/* frontend/src/pages/Dashboard.css */
-.dashboard-container {
-  max-width: 1000px;
-  margin: 30px auto;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  animation: fadeIn 0.5s ease-out;
-}
+/* src/pages/Dashboard.css */
 
-.dashboard-menu {
+.dashboard-wrapper {
   display: flex;
-  justify-content: flex-start;
-  gap: 15px;
-  margin-bottom: 15px;
+  min-height: 100vh;
+  background: #f5f7fa;
+  font-family: 'Kanit', 'Segoe UI', sans-serif;
 }
 
-.dashboard-menu button {
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  
-  color: rgb(255, 255, 255);
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+/* Main Content */
+.main-content {
+  flex: 1;
+  margin-left: 260px;
+  transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
 }
 
-.user-btn {
-  background: #007bff;
+.main-content.collapsed {
+  margin-left: 70px;
 }
 
-
-.locker-btn {
-  background: #17a2b8;
+/* Content Area */
+.content-area {
+  margin-top: 70px;
+  padding: 30px;
+  flex: 1;
 }
 
-.dashboard-menu button:hover {
-  background: #0056b3;
-  transform: scale(1.05);
+.content-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  padding: 35px;
+  height: 100%;
+  overflow: auto;
 }
 
-.dashboard-menu button.active {
-  background: #325284;
-}
-
-.logout-btn {
-  margin-left: auto;
-  background: #dc3545;
-}
-
-.logout-btn:hover {
-  background: #a71d2a;
-}
-
-.dashboard-time {
-  text-align: right;
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 15px;
-}
-
-.dashboard-content {
-  overflow-x: auto;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===== ปุ่มดูสรุป ===== */
-.summary-btn {
-  background: #28a745;
-  margin-left: 10px;
-}
-
-.summary-btn:hover {
-  background: #218838;
-  transform: scale(1.05);
-}
-
-/* ===== MODAL ===== */
+/* Modal สรุป */
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  animation: fadeIn 0.3s;
+  z-index: 2000;
 }
 
 .modal-content {
   background: white;
-  padding: 30px;
+  padding: 35px;
   border-radius: 12px;
   width: 90%;
-  max-width: 700px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-  animation: slideUp 0.4s ease-out;
+  max-width: 750px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
 }
 
+/* Responsive Design */
+@media (max-width: 992px) {
+  /* Sidebar หุบอัตโนมัติในหน้าจอเล็ก */
+  .dashboard-sidebar {
+    width: 70px !important;
+  }
+
+  .dashboard-sidebar .sidebar-header h2,
+  .dashboard-sidebar .sidebar-menu button {
+    font-size: 0;
+  }
+
+  .main-content,
+  .dashboard-navbar {
+    margin-left: 70px !important;
+    left: 70px !important;
+  }
+
+  .content-area {
+    padding: 20px;
+  }
+
+  .content-container {
+    padding: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* แท็บเล็ตและมือถือ */
+  .dashboard-navbar {
+    padding: 0 20px;
+  }
+
+  .navbar-title {
+    font-size: 20px;
+  }
+
+  .navbar-time {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+
+  .sidebar-toggle-btn {
+    width: 48px;
+    height: 48px;
+  }
+
+  .hamburger-line {
+    width: 24px;
+  }
+
+  .arrow-icon {
+    font-size: 32px;
+  }
+
+  .content-area {
+    padding: 15px;
+  }
+
+  .content-container {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  /* มือถือขนาดเล็ก */
+  .modal-content {
+    padding: 25px;
+    width: 95%;
+    max-width: none;
+  }
+
+  .modal-content h2 {
+    font-size: 22px;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+  }
+
+  .big-number {
+    font-size: 28px;
+  }
+
+  .summary-card h3 {
+    font-size: 14px;
+  }
+
+  .modal-close-btn {
+    padding: 10px 30px;
+    font-size: 15px;
+  }
+}
+
+/* Modal เดิม (ปรับเล็กน้อยให้ responsive) */
 .modal-content h2 {
   text-align: center;
-  margin-bottom: 25px;
-  color: #1e3c72;
+  margin-bottom: 24px;
+  color: #2c3e50;
+  font-size: 26px;
 }
 
 .summary-grid {
@@ -117,11 +172,11 @@
 }
 
 .summary-card {
-  background: #f8f9fa;
+  background: #f8fafc;
   padding: 20px;
   border-radius: 10px;
   text-align: center;
-  border: 1px solid #e9ecef;
+  border: 1px solid #e2e8f0;
   transition: transform 0.2s;
 }
 
@@ -130,57 +185,36 @@
 }
 
 .summary-card h3 {
-  margin: 0 0 10px 0;
-  color: #495057;
+  margin: 0 0 10px;
+  color: #34495e;
   font-size: 16px;
 }
 
-.summary-card .big-number {
+.big-number {
   font-size: 36px;
   font-weight: bold;
-  margin: 0;
-  color: #007bff;
+  color: #3498db;
 }
 
-/* สีเฉพาะสถานะ */
-.summary-card.active { border-left: 5px solid #28a745; }
-.summary-card.active .big-number { color: #28a745; }
-
-.summary-card.inactive { border-left: 5px solid #dc3545; }
-.summary-card.inactive .big-number { color: #dc3545; }
-
-.summary-card.available { border-left: 5px solid #17a2b8; }
-.summary-card.available .big-number { color: #17a2b8; }
-
-.summary-card.used { border-left: 5px solid #ffc107; }
-.summary-card.used .big-number { color: #ffc107; }
+/* สีสถานะ */
+.summary-card.active .big-number { color: #27ae60; }
+.summary-card.inactive .big-number { color: #e74c3c; }
+.summary-card.available .big-number { color: #3498db; }
+.summary-card.used .big-number { color: #f39c12; }
 
 .modal-close-btn {
   display: block;
   margin: 0 auto;
-  padding: 10px 30px;
-  background: #6c757d;
+  padding: 10px 35px;
+  background: #95a5a6;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 16px;
   cursor: pointer;
+  transition: background 0.3s;
 }
 
 .modal-close-btn:hover {
-  background: #5a6268;
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(50px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ปุ่มประวัติการทำรายการ */
-.transaction-btn {
-  background: #6f42c1;
-}
-
-.transaction-btn:hover {
-  background: #5a32a3;
+  background: #7f8c8d;
 }

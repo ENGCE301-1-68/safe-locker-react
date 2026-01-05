@@ -1,13 +1,17 @@
 // frontend/src/pages/Dashboard.jsx
 import React, { useState, useEffect } from 'react';
+import Sidebar from '../components/Sidebar.jsx';
+import Navbar from '../components/Navbar.jsx';
 import UsersPage from './UsersPage.jsx';
 import LockersPage from './LockersPage.jsx';
-import TransactionPage from './TransactionPage.jsx'; 
+import TransactionPage from './TransactionPage.jsx';
 import './Dashboard.css';
-import api from '../api/axios'; 
+import api from '../api/axios';
+import { useNavigate } from 'react-router-dom'; // เพิ่ม useNavigate
 
 function Dashboard() {
   const [page, setPage] = useState('users');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showSummary, setShowSummary] = useState(false);
   const [summary, setSummary] = useState({
@@ -16,14 +20,18 @@ function Dashboard() {
     inactiveUsers: 0,
     totalLockers: 0,
     availableLockers: 0,
-    usedLockers: 0
+    usedLockers: 0,
   });
 
+  const navigate = useNavigate(); // สำหรับ redirect
+
+  // อัปเดตเวลาเรียลไทม์
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
+  // ดึงข้อมูลสรุป
   const fetchSummary = async () => {
     try {
       const res = await api.get('/api/summary');
@@ -34,46 +42,58 @@ function Dashboard() {
     }
   };
 
+  // ออกจากระบบ - กลับไปหน้า Admin Login
   const handleLogout = async () => {
     try {
       await api.post('/api/admin/logout', {});
     } catch (err) {
       console.log('Logout error:', err);
     }
+    // ล้างสถานะ login
     localStorage.removeItem('admin');
-    window.location.href = '/';
+    
+    // กลับไปหน้า Admin Login เท่านั้น
+    navigate('/admin-login', { replace: true });
+  };
+
+  // ชื่อหน้าปัจจุบันสำหรับ Navbar
+  const getPageTitle = () => {
+    const titles = {
+      users: 'จัดการผู้ใช้',
+      lockers: 'จัดการ Locker',
+      transactions: 'ประวัติการทำรายการ',
+    };
+    return titles[page] || 'แดชบอร์ด';
   };
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-menu">
-        <button className={`user-btn ${page === 'users' ? 'active' : ''}`} onClick={() => setPage('users')}>
-          จัดการผู้ใช้
-        </button>
-        <button className={`locker-btn ${page === 'lockers' ? 'active' : ''}`} onClick={() => setPage('lockers')}>
-          จัดการ Locker
-        </button>
-        <button className={`transaction-btn ${page === 'transactions' ? 'active' : ''}`} onClick={() => setPage('transactions')}>
-          ประวัติการทำรายการ
-        </button>
-        <button className="summary-btn" onClick={fetchSummary}>
-          ดูสรุปทั้งหมด
-        </button>
-        <button className="logout-btn" onClick={handleLogout}>
-          ออกจากระบบ
-        </button>
+    <div className="dashboard-wrapper">
+      <Sidebar
+        sidebarOpen={sidebarOpen}
+        currentPage={page}
+        setPage={setPage}
+        fetchSummary={fetchSummary}
+        handleLogout={handleLogout}
+      />
+
+      <div className={`main-content ${!sidebarOpen ? 'collapsed' : ''}`}>
+        <Navbar
+          currentTime={currentTime}
+          pageTitle={getPageTitle()}
+          sidebarOpen={sidebarOpen}
+          toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+        />
+
+        <main className="content-area">
+          <div className="content-container">
+            {page === 'users' && <UsersPage />}
+            {page === 'lockers' && <LockersPage />}
+            {page === 'transactions' && <TransactionPage />}
+          </div>
+        </main>
       </div>
 
-      <div className="dashboard-time">
-        {currentTime.toLocaleString('th-TH', { dateStyle: 'full', timeStyle: 'medium' })}
-      </div>
-
-      <div className="dashboard-content">
-        {page === 'users' && <UsersPage />}
-        {page === 'lockers' && <LockersPage />}
-        {page === 'transactions' && <TransactionPage />}
-      </div>
-
+      {/* Modal สรุปข้อมูลระบบ */}
       {showSummary && (
         <div className="modal-overlay" onClick={() => setShowSummary(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>

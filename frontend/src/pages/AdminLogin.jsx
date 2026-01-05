@@ -1,18 +1,20 @@
-// frontend/src/pages/AdminLogin.jsx
+// src/pages/AdminLogin.jsx
 import React, { useState } from 'react';
-import api from '../api/axios'; // เรียกใช้ Axios ที่ตั้งค่าไว้
-import '../App.css';
+import api from '../api/axios';
+import { useNavigate } from 'react-router-dom';
+import './AdminLogin.css';
 
 function AdminLogin() {
-  const [id, setId] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!id.trim() || !password.trim()) {
-      setError('กรุณากรอก Admin ID และ Password');
+    if (!username.trim() || !password.trim()) {
+      setError('กรุณากรอก Username และ Password');
       return;
     }
 
@@ -20,47 +22,44 @@ function AdminLogin() {
     setError('');
 
     try {
-      const res = await api.post(
-        '/api/admin/login',
-        { id, password }
-      );
+      const res = await api.post('/api/admin/login', {
+        username: username.trim(),
+        password
+      });
 
       if (res.data.message) {
-        // ใช้ session จาก backend เท่านั้น (ไม่ใช้ localStorage)
-        window.location.href = '/dashboard';
+        localStorage.setItem('admin', 'true');
+        navigate('/dashboard');
       }
     } catch (err) {
-      setError('Admin ID หรือ Password ไม่ถูกต้อง');
+      setError('Username หรือ Password ไม่ถูกต้อง');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-wrapper">
-      <div className="login-card">
-        <h2 className="login-title">เข้าสู่ระบบแอดมิน</h2>
+    <div className="admin-login-wrapper">
+      <div className="admin-login-card">
+        <h2 className="admin-login-title">Admin Login</h2>
+        <p className="admin-login-subtitle">เข้าสู่ระบบผู้ดูแล</p>
 
-        <Link to="/" className="back-to-main-btn">
-          ← กลับหน้าหลัก
-        </Link>
-
-        {error && <div className="login-error">{error}</div>}
+        {error && <div className="admin-login-error">{error}</div>}
 
         <form onSubmit={handleLogin}>
-          <div className="login-group">
-            <label>Admin ID</label>
+          <div className="admin-login-group">
+            <label>Username</label>
             <input
               type="text"
-              placeholder="กรอก Admin ID"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
+              placeholder="กรอก Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
               disabled={loading}
             />
           </div>
 
-          <div className="login-group">
+          <div className="admin-login-group">
             <label>Password</label>
             <input
               type="password"
@@ -72,12 +71,12 @@ function AdminLogin() {
             />
           </div>
 
-          <button type="submit" className="login-btn" disabled={loading}>
+          <button type="submit" className="admin-login-btn" disabled={loading}>
             {loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
           </button>
         </form>
 
-        <div className="login-footer">© 2025 SafeLocker System</div>
+        <div className="admin-login-footer">© 2025 SafeLocker Admin</div>
       </div>
     </div>
   );

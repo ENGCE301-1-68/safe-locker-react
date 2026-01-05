@@ -1,0 +1,116 @@
+/* src/components/Sidebar.css */
+
+.dashboard-sidebar {
+  width: 260px;
+  background: #2c3e50;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar-header {
+  padding: 25px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 78px;
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 22px;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.dashboard-sidebar.collapsed .sidebar-header h2 {
+  opacity: 0;
+}
+
+.sidebar-menu {
+  flex: 1;
+  padding: 15px 0;
+}
+
+.sidebar-menu button {
+  width: 100%;
+  padding: 16px 24px;
+  background: transparent;
+  border: none;
+  color: #ecf0f1;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  position: relative;
+}
+
+.sidebar-menu button:hover {
+  background: rgba(198, 194, 194, 0.1);
+}
+
+.sidebar-menu button.active {
+  background: #34495e;
+  font-weight: 600;
+  border-left: 4px solid #3498db;
+}
+
+.summary-btn,
+.logout-btn {
+  margin: 12px 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  padding: 14px 20px;
+}
+
+.summary-btn { background: #27ae60; }
+.summary-btn:hover { background: #219a52; }
+
+.logout-btn { background: #e74c3c; }
+.logout-btn:hover { background: #c0392b; }
+
+.dashboard-sidebar.collapsed .sidebar-menu button {
+  padding: 16px 0;
+  text-align: center;
+  font-size: 0;
+}
+
+.dashboard-sidebar.collapsed .summary-btn,
+.dashboard-sidebar.collapsed .logout-btn {
+  margin: 12px 10px;
+  padding: 14px 0;
+  font-size: 14px;
+}
+
+.dashboard-sidebar.collapsed .sidebar-menu button:hover::after {
+  content: attr(data-title);
+  position: absolute;
+  left: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #2c3e50;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  white-space: nowrap;
+  z-index: 10000;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}

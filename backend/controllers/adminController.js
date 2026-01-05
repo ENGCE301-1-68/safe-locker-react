@@ -1,17 +1,26 @@
+// backend/controllers/adminController.js
 const db = require('../config/db');
-const bcrypt = require('bcryptjs');
-
-const ADMIN_ID = 'admin';
-const ADMIN_PASSWORD = 'admin123'; // ควรเก็บ hashed ในจริง
 
 const login = (req, res) => {
-  const { id, password } = req.body;
-  if (id === ADMIN_ID && password === ADMIN_PASSWORD) {
-    req.session.admin = true;
-    res.json({ message: 'Login successful' });
-  } else {
-    res.status(401).json({ message: 'Invalid credentials' });
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ message: 'กรุณากรอก username และ password' });
   }
+
+  db.query(
+    'SELECT admin_id FROM admins WHERE username = ? AND password = ? AND active = 1',
+    [username, password],
+    (err, results) => {
+      if (err || results.length === 0) {
+        return res.status(401).json({ message: 'Username หรือ Password ไม่ถูกต้อง' });
+      }
+
+      // สร้าง session
+      req.session.admin = { id: results[0].admin_id, username };
+      res.json({ message: 'Login successful' });
+    }
+  );
 };
 
 const logout = (req, res) => {
@@ -20,4 +29,3 @@ const logout = (req, res) => {
 };
 
 module.exports = { login, logout };
-

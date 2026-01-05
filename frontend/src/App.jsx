@@ -1,37 +1,33 @@
-// frontend/src/App.jsx
+// src/App.jsx
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import Login from './pages/Login.jsx';
+import DepositLogin from './pages/DepositLogin.jsx';     // หน้าแรกผู้ใช้
+import DepositPage from './pages/DepositPage.jsx';       // หน้าฝากของ
+import AdminLogin from './pages/AdminLogin.jsx';         // หน้า Admin Login
 import Dashboard from './pages/Dashboard.jsx';
-import DepositPage from './pages/DepositPage.jsx';
 
-// Component สำหรับ Private Route (เฉพาะแอดมิน)
 const PrivateRoute = ({ children }) => {
   const isAdminLoggedIn = localStorage.getItem('admin') === 'true';
-  return isAdminLoggedIn ? children : <Navigate to="/" replace />;
+  return isAdminLoggedIn ? children : <Navigate to="/admin-login" replace />;
 };
 
 function App() {
   return (
     <Routes>
-      {/* หน้าแรก: ไปที่ Login เสมอ (public) */}
-      <Route path="/" element={<Login />} />
+      {/* หน้าแรก: ผู้ใช้ฝากของ */}
+      <Route path="/" element={<DepositLogin />} />
 
-      {/* หน้าฝากของ: public ใครก็เข้าได้ ไม่ตรวจ login */}
+      {/* หน้าฝากของ */}
       <Route path="/deposit" element={<DepositPage />} />
 
-      {/* Dashboard และหน้าอื่นๆ ของแอดมิน: ต้อง login ก่อน */}
-      <Route
-        path="/dashboard/*"
-        element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        }
-      />
+      {/* Admin Login */}
+      <Route path="/admin-login" element={<AdminLogin />} />
 
-      {/* ถ้าเข้าผิด path → กลับไปหน้า login */}
+      {/* Dashboard - ต้อง login admin ก่อน */}
+      <Route path="/dashboard/*" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+
+      {/* ผิด path → กลับหน้าแรก */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

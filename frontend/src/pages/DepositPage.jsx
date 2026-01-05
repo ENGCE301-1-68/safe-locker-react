@@ -1,50 +1,35 @@
-// frontend/src/pages/DepositPage.jsx
-import React, { useState } from 'react';
-import api from '../api/axios'; 
-import { Link } from 'react-router-dom';
+// src/pages/DepositPage.jsx
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import api from '../api/axios';
 import './DepositPage.css';
 
 function DepositPage() {
-  const [step, setStep] = useState(1);
-  const [phone, setPhone] = useState('');
-  const [passcode, setPasscode] = useState('');
-  const [availableLockers, setAvailableLockers] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // รับข้อมูลจาก DepositLogin ผ่าน state
+  const {
+    user,
+    currentLockers: initialCurrent = [],
+    availableLockers: initialAvailable = [],
+    phone,
+    passcode
+  } = location.state || {};
+
+  const [userInfo, setUserInfo] = useState(user || null);
+  const [currentLockers, setCurrentLockers] = useState(initialCurrent);
+  const [availableLockers, setAvailableLockers] = useState(initialAvailable);
   const [selectedLocker, setSelectedLocker] = useState(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleCheckUser = async (e) => {
-    e.preventDefault();
-    if (!phone.trim() || !passcode.trim()) {
-      setMessage('กรุณากรอกเบอร์โทรศัพท์และรหัสผ่าน');
-      return;
+  // ถ้าไม่มีข้อมูลผู้ใช้ → กลับไปหน้า login
+  useEffect(() => {
+    if (!userInfo) {
+      navigate('/');
     }
-
-    setLoading(true);
-    setMessage('');
-
-    try {
-      const res = await api.post('/api/deposit/available', {
-        phone: phone.trim(),
-        passcode: passcode.trim()
-      });
-
-      const lockers = res.data.availableLockers || [];
-
-      if (lockers.length === 0) {
-        setMessage('ขออภัย ไม่มีตู้ว่างในขณะนี้');
-      } else {
-        setAvailableLockers(lockers);
-        setStep(2);
-      }
-    } catch (error) {
-      setMessage(
-        error.response?.data?.message || 'เบอร์โทรศัพท์หรือรหัสผ่านไม่ถูกต้อง'
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [userInfo, navigate]);
 
   const handleDeposit = async () => {
     if (!selectedLocker) {
@@ -57,110 +42,116 @@ function DepositPage() {
 
     try {
       const res = await api.post('/api/deposit/confirm', {
-        phone: phone.trim(),
-        passcode: passcode.trim(),
+        phone,
+        passcode,
         locker_id: selectedLocker
       });
 
-      setMessage(res.data.message);
-      setPhone('');
-      setPasscode('');
-      setAvailableLockers([]);
+      setMessage(res.data.message || 'ฝากของสำเร็จ!');
+
+      // รีเฟรชข้อมูลตู้
+      const refreshRes = await api.post('/api/deposit/check', { phone, passcode });
+      const { current_lockers, available_lockers } = refreshRes.data;
+      setCurrentLockers(current_lockers || []);
+      setAvailableLockers(available_lockers || []);
       setSelectedLocker(null);
-      setStep(1);
     } catch (error) {
-      setMessage(
-        error.response?.data?.message || 'ไม่สามารถฝากของได้'
-      );
+      setMessage(error.response?.data?.message || 'ไม่สามารถฝากของได้');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleBack = () => {
-    setStep(1);
-    setMessage('');
-    setSelectedLocker(null);
+  const handleLogout = () => {
+    navigate('/');
+  };
+
+  const formatTime = (timeStr) => {
+    if (!timeStr) return '-';
+    return new Intl.DateTimeFormat('th-TH', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(new Date(timeStr));
   };
 
   return (
     <div className="deposit-page">
-      <Link to="/" className="back-button">
-        ← กลับหน้าหลัก
-      </Link>
-
       <div className="deposit-container">
         <h1 className="deposit-title">ฝากของใน Locker</h1>
 
         {message && (
-          <div className={`message ${message.includes('สำเร็จ') ? 'success' : 'error'}`}>
+          <div className={`deposit-message ${message.includes('สำเร็จ') ? 'success' : 'error'}`}>
             {message}
           </div>
         )}
 
-        {step === 1 && (
-          <form onSubmit={handleCheckUser} className="deposit-form">
-            <div className="input-group">
-              <label>เบอร์โทรศัพท์</label>
-              <input
-                type="text"
-                placeholder="เช่น 0812345678"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-                disabled={loading}
-              />
-            </div>
-
-            <div className="input-group">
-              <label>รหัสผ่าน</label>
-              <input
-                type="password"
-                placeholder="รหัสที่ได้รับจากแอดมิน"
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                required
-                disabled={loading}
-              />
-            </div>
-
-            <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? 'กำลังตรวจสอบ...' : 'ตรวจสอบและเลือกตู้'}
-            </button>
-          </form>
-        )}
-
-        {step === 2 && (
-          <div className="select-locker-step">
-            <h2 className="select-title">เลือกตู้ว่าง (มี {availableLockers.length} ตู้)</h2>
-
-            <div className="lockers-grid">
-              {availableLockers.map((id) => (
-                <div
-                  key={id}
-                  className={`locker-card empty ${selectedLocker === id ? 'selected' : ''}`}
-                  onClick={() => setSelectedLocker(id)}
-                >
-                  <div className="locker-header">
-                    <h3>Locker #{id}</h3>
-                    <span className="status-badge">ว่าง</span>
-                  </div>
-                  <div className="select-hint">
-                    {selectedLocker === id ? '✓ เลือกแล้ว' : 'คลิกเพื่อเลือก'}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="action-buttons">
-              <button
-                onClick={handleDeposit}
-                className="btn-primary"
-                disabled={!selectedLocker || loading}
-              >
-                {loading ? 'กำลังฝาก...' : 'ยืนยันฝากของ'}
+        {userInfo && (
+          <div className="deposit-main-section">
+            {/* ส่วนหัว: ชื่อผู้ใช้ + ปุ่มออกจากระบบ */}
+            <div className="deposit-header-bar">
+              <div className="deposit-user-info">
+                <span className="user-name">{userInfo.fullname || 'ลูกบ้าน'}</span>
+                <span className="user-room">ห้อง {userInfo.room_number || '-'}</span>
+              </div>
+              <button onClick={handleLogout} className="deposit-logout-btn">
+                ออกจากระบบ
               </button>
             </div>
+
+            {/* ตู้ที่ใช้งานอยู่ */}
+            <section className="deposit-current-section">
+              <h2 className="section-title">ตู้ที่คุณกำลังใช้งาน ({currentLockers.length} ตู้)</h2>
+              {currentLockers.length === 0 ? (
+                <p className="no-items-text">คุณยังไม่มีของฝากในตู้ใด</p>
+              ) : (
+                <div className="current-lockers-grid">
+                  {currentLockers.map((locker) => (
+                    <div key={locker.locker_id} className="current-locker-card">
+                      <div className="locker-number">Locker #{locker.locker_id}</div>
+                      <div className="deposit-time">ฝากเมื่อ {formatTime(locker.deposit_time)}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            {/* เลือกตู้ว่าง */}
+            {availableLockers.length > 0 ? (
+              <section className="deposit-available-section">
+                <h2 className="section-title">เลือกตู้ว่างเพื่อฝากของ</h2>
+                <div className="available-lockers-grid">
+                  {availableLockers.map((id) => (
+                    <div
+                      key={id}
+                      className={`available-locker-card ${selectedLocker === id ? 'selected' : ''}`}
+                      onClick={() => setSelectedLocker(id)}
+                    >
+                      <div className="locker-number">Locker #{id}</div>
+                      <div className="status-text">ว่าง</div>
+                      <div className="select-hint">
+                        {selectedLocker === id ? 'เลือกแล้ว' : 'คลิกเพื่อเลือก'}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="confirm-button-wrapper">
+                  <button
+                    onClick={handleDeposit}
+                    className="deposit-btn-primary"
+                    disabled={!selectedLocker || loading}
+                  >
+                    {loading ? 'กำลังฝาก...' : 'ยืนยันฝากของ'}
+                  </button>
+                </div>
+              </section>
+            ) : (
+              <section className="no-available-section">
+                <p className="no-items-text">ขออภัย ไม่มีตู้ว่างในขณะนี้</p>
+              </section>
+            )}
           </div>
         )}
       </div>
